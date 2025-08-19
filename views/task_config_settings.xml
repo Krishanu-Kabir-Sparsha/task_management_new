@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Configuration Settings Form -->
+    <record id="res_config_settings_view_form_task" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.task.management</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="45"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Task Management" string="Task Management" name="task_management">
+                    <h2>Task Management Configuration</h2>
+                    <div class="row mt16 o_settings_container" name="task_management_settings">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="task_allow_timesheets"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="task_allow_timesheets"/>
+                                <div class="text-muted">
+                                    Enable time logging on tasks
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="task_allow_subtasks"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="task_allow_subtasks"/>
+                                <div class="text-muted">
+                                    Allow creating subtasks
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="task_auto_assign"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="task_auto_assign"/>
+                                <div class="text-muted">
+                                    Automatically assign new tasks to current user
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="task_default_planned_hours"/>
+                                <field name="task_default_planned_hours" widget="float_time"/>
+                                <div class="text-muted">
+                                    Default planned hours for new tasks
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="task_notification_deadline"/>
+                                <field name="task_notification_deadline"/>
+                                <div class="text-muted">
+                                    Send reminder X days before deadline
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Action for Settings -->
+    <record id="action_task_config_settings" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module': 'task_management', 'bin_size': False}</field>
+    </record>
+</odoo>

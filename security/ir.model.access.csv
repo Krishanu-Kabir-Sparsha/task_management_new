@@ -1,0 +1,17 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_task_management_user,task.management.user,model_task_management,task_management.group_task_user,1,1,1,0
+access_task_management_manager,task.management.manager,model_task_management,task_management.group_task_manager,1,1,1,1
+access_task_team_user,task.team.user,model_task_team,task_management.group_task_user,1,1,1,0
+access_task_team_manager,task.team.manager,model_task_team,task_management.group_task_manager,1,1,1,1
+access_task_stage_user,task.stage.user,model_task_stage,task_management.group_task_user,1,0,0,0
+access_task_stage_manager,task.stage.manager,model_task_stage,task_management.group_task_manager,1,1,1,1
+access_task_tag_user,task.tag.user,model_task_tag,task_management.group_task_user,1,1,1,0
+access_task_tag_manager,task.tag.manager,model_task_tag,task_management.group_task_manager,1,1,1,1
+access_task_subtask_user,task.subtask.user,model_task_subtask,task_management.group_task_user,1,1,1,1
+access_task_timesheet_line_user,task.timesheet.line.user,model_task_timesheet_line,task_management.group_task_user,1,1,1,1
+access_task_recurrence_user,task.recurrence.user,model_task_recurrence,task_management.group_task_user,1,1,1,0
+access_task_recurrence_manager,task.recurrence.manager,model_task_recurrence,task_management.group_task_manager,1,1,1,1
+access_task_template_user,task.template.user,model_task_template,task_management.group_task_user,1,1,1,0
+access_task_template_manager,task.template.manager,model_task_template,task_management.group_task_manager,1,1,1,1
+access_task_subtask_template_user,task.subtask.template.user,model_task_subtask_template,task_management.group_task_user,1,1,1,0
+access_task_subtask_template_manager,task.subtask.template.manager,model_task_subtask_template,task_management.group_task_manager,1,1,1,1

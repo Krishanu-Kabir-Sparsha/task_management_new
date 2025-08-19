@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Activity View -->
+    <record id="view_task_management_activity" model="ir.ui.view">
+        <field name="name">task.management.activity</field>
+        <field name="model">task.management</field>
+        <field name="arch" type="xml">
+            <activity string="Task Activities">
+                <field name="user_id"/>
+                <templates>
+                    <div t-name="activity-box">
+                        <div>
+                            <field name="name" display="full"/>
+                        </div>
+                    </div>
+                </templates>
+            </activity>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="task_management.TaskProgressWidget" owl="1">
+        <div class="o_task_progress_widget">
+            <div class="progress" style="height: 20px;">
+                <div t-attf-class="progress-bar bg-{{progressColor}}" 
+                     role="progressbar" 
+                     t-att-style="'width: ' + taskProgress + '%'" 
+                     t-att-aria-valuenow="taskProgress" 
+                     aria-valuemin="0" 
+                     aria-valuemax="100">
+                    <t t-esc="taskProgress"/>%
+                </div>
+            </div>
+            <input t-ref="slider" 
+                   type="range" 
+                   class="form-range mt-2" 
+                   t-on-change="updateProgress" 
+                   min="0" 
+                   max="100" 
+                   step="5" 
+                   t-att-value="taskProgress"/>
+        </div>
+    </t>
+</templates>

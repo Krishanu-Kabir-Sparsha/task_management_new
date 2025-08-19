@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Simplified Calendar View -->
+    <record id="view_task_management_calendar" model="ir.ui.view">
+        <field name="name">task.management.calendar</field>
+        <field name="model">task.management</field>
+        <field name="arch" type="xml">
+            <calendar string="Tasks" date_start="date_deadline" mode="month">
+                <field name="name"/>
+                <field name="user_id"/>
+            </calendar>
+        </field>
+    </record>
+</odoo>

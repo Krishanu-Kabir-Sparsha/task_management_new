@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Default Task Stages -->
+        <record id="task_stage_todo" model="task.stage">
+            <field name="name">To-Do</field>
+            <field name="sequence">10</field>
+            <field name="stage_type">new</field>
+            <field name="fold">False</field>
+            <field name="color">3</field>
+            <field name="description">Tasks to be started</field>
+        </record>
+
+        <record id="task_stage_in_progress" model="task.stage">
+            <field name="name">In Progress</field>
+            <field name="sequence">20</field>
+            <field name="stage_type">in_progress</field>
+            <field name="fold">False</field>
+            <field name="color">2</field>
+            <field name="description">Tasks currently being worked on</field>
+        </record>
+
+        <record id="task_stage_review" model="task.stage">
+            <field name="name">Review</field>
+            <field name="sequence">30</field>
+            <field name="stage_type">in_progress</field>
+            <field name="fold">False</field>
+            <field name="color">1</field>
+            <field name="description">Tasks pending review</field>
+        </record>
+
+        <record id="task_stage_done" model="task.stage">
+            <field name="name">Done</field>
+            <field name="sequence">40</field>
+            <field name="stage_type">done</field>
+            <field name="fold">False</field>
+            <field name="color">10</field>
+            <field name="is_closed">True</field>
+            <field name="description">Completed tasks</field>
+        </record>
+
+        <record id="task_stage_cancelled" model="task.stage">
+            <field name="name">Cancelled</field>
+            <field name="sequence">50</field>
+            <field name="stage_type">cancelled</field>
+            <field name="fold">True</field>
+            <field name="color">9</field>
+            <field name="is_closed">True</field>
+            <field name="description">Cancelled tasks</field>
+        </record>
+
+        <!-- Default Tags -->
+        <record id="task_tag_urgent" model="task.tag">
+            <field name="name">Urgent</field>
+            <field name="color">9</field>
+        </record>
+
+        <record id="task_tag_important" model="task.tag">
+            <field name="name">Important</field>
+            <field name="color">2</field>
+        </record>
+
+        <record id="task_tag_bug" model="task.tag">
+            <field name="name">Bug</field>
+            <field name="color">1</field>
+        </record>
+
+        <record id="task_tag_feature" model="task.tag">
+            <field name="name">Feature</field>
+            <field name="color">4</field>
+        </record>
+
+        <record id="task_tag_improvement" model="task.tag">
+            <field name="name">Improvement</field>
+            <field name="color">3</field>
+        </record>
+    </data>
+</odoo>

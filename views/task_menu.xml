@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- My Tasks Action (Individual) -->
+    <record id="action_my_tasks" model="ir.actions.act_window">
+        <field name="name">My Tasks</field>
+        <field name="res_model">task.management</field>
+        <field name="view_mode">list,kanban,form,calendar</field>
+        <field name="domain">[('task_type', '=', 'individual'), ('user_id', '=', uid)]</field>
+        <field name="context">{
+            'default_task_type': 'individual',
+            'default_user_id': uid,
+            'search_default_open_tasks': 1
+        }</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('view_individual_task_list')}),
+            (0, 0, {'view_mode': 'kanban', 'view_id': ref('view_task_management_kanban')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('view_individual_task_form')}),
+            (0, 0, {'view_mode': 'calendar', 'view_id': ref('view_task_management_calendar')})]"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first personal task!
+            </p>
+            <p>
+                Manage your individual tasks, set deadlines, track progress,
+                and organize your personal work efficiently.
+            </p>
+        </field>
+    </record>
+
+    <!-- Teams Action -->
+    <record id="action_task_teams" model="ir.actions.act_window">
+        <field name="name">Teams</field>
+        <field name="res_model">task.team</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first team!
+            </p>
+            <p>
+                Organize teams, assign managers and members,
+                and manage team tasks collaboratively.
+            </p>
+        </field>
+    </record>
+
+    <!-- Team Tasks Action -->
+    <record id="action_team_tasks" model="ir.actions.act_window">
+        <field name="name">Team Tasks</field>
+        <field name="res_model">task.management</field>
+        <field name="view_mode">list,kanban,form,calendar</field>
+        <field name="domain">[('task_type', '=', 'team')]</field>
+        <field name="context">{
+            'default_task_type': 'team',
+            'search_default_open_tasks': 1,
+            'form_view_ref': 'task_management.view_team_task_form'
+        }</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('view_team_task_list')}),
+            (0, 0, {'view_mode': 'kanban', 'view_id': ref('view_task_management_kanban')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('view_team_task_form')}),
+            (0, 0, {'view_mode': 'calendar', 'view_id': ref('view_task_management_calendar')})]"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No team tasks yet!
+            </p>
+            <p>
+                First create a team, then assign tasks to teams
+                for collaborative work management.
+            </p>
+        </field>
+    </record>
+
+    <!-- All Tasks Action -->
+    <record id="action_all_tasks" model="ir.actions.act_window">
+        <field name="name">📊 Task Dashboard</field>
+        <field name="res_model">task.management</field>
+        <field name="view_mode">list,form,kanban,calendar,activity</field>
+        <field name="domain">[]</field>
+        <field name="context">{
+            'search_default_open_tasks': 1, 
+            'create': False,
+            'edit': False,
+            'delete': False,
+            'form_view_initial_mode': 'readonly'
+        }</field>
+        <field name="help" type="html">
+            <div class="o_view_nocontent_smiling_face">
+                <h2>📋 Welcome to Task Management!</h2>
+                <p>
+                    No tasks created yet. Start by creating your first task!
+                </p>
+                <p>
+                    <a type="action" name="%(action_my_tasks)d" class="btn btn-primary">
+                        <i class="fa fa-user"/> Create Personal Task
+                    </a>
+                    <a type="action" name="%(action_team_tasks)d" class="btn btn-secondary ml-2">
+                        <i class="fa fa-users"/> Create Team Task
+                    </a>
+                </p>
+            </div>
+        </field>
+    </record>
+
+    <!-- Task Stages Action -->
+    <record id="action_task_stage" model="ir.actions.act_window">
+        <field name="name">Task Stages</field>
+        <field name="res_model">task.stage</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Task Tags Action -->
+    <record id="action_task_tag" model="ir.actions.act_window">
+        <field name="name">Task Tags</field>
+        <field name="res_model">task.tag</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Main Menu -->
+    <menuitem id="menu_task_management_root"
+            name="Task Management"
+            sequence="5"
+            action="action_all_tasks"
+            web_icon="task_management,static/description/icon.png"
+            groups="base.group_user"/>
+
+    <!-- Dashboard (All Tasks) - First/Default -->
+    <menuitem id="menu_all_tasks"
+            name="📊 Dashboard"
+            parent="menu_task_management_root"
+            action="action_all_tasks"
+            sequence="1"/>
+
+    <!-- My Tasks Section -->
+    <menuitem id="menu_my_tasks_section"
+            name="My Tasks"
+            parent="menu_task_management_root"
+            action="action_my_tasks"
+            sequence="10"/>
+
+    <!-- Team Tasks Section -->
+    <menuitem id="menu_team_section"
+            name="Team Tasks"
+            parent="menu_task_management_root"
+            sequence="20"/>
+
+    <menuitem id="menu_teams"
+            name="Teams"
+            parent="menu_team_section"
+            action="action_task_teams"
+            sequence="10"/>
+
+    <menuitem id="menu_team_tasks"
+            name="Team Tasks"
+            parent="menu_team_section"
+            action="action_team_tasks"
+            sequence="20"/>
+
+    <!-- Configuration Menu -->
+    <menuitem id="menu_task_configuration"
+              name="Configuration"
+              parent="menu_task_management_root"
+              sequence="100"
+              groups="task_management.group_task_manager"/>
+
+    <menuitem id="menu_task_stages"
+              name="Stages"
+              parent="menu_task_configuration"
+              action="action_task_stage"
+              sequence="10"/>
+
+    <menuitem id="menu_task_tags"
+              name="Tags"
+              parent="menu_task_configuration"
+              action="action_task_tag"
+              sequence="20"/>
+
+    <!-- <menuitem id="menu_task_templates"
+              name="Templates"
+              parent="menu_task_configuration"
+              action="action_task_template"
+              sequence="25"/> -->
+
+    <menuitem id="menu_task_settings"
+              name="Settings"
+              parent="menu_task_configuration"
+              action="action_task_config_settings"
+              sequence="30"/>
+
+    <!-- Other Modules Menu -->
+    <menuitem id="menu_other_modules"
+            name="Other Modules"
+            parent="menu_task_management_root"
+            sequence="200"/>
+
+    <!-- Create Server Action with NEW ID -->
+    <record id="action_navigate_to_project" model="ir.actions.server">
+        <field name="name">Go to Project Module</field>
+        <field name="model_id" ref="base.model_ir_ui_menu"/>
+        <field name="state">code</field>
+        <field name="code">
+    action = {
+        'type': 'ir.actions.act_url',
+        'url': '/web#action=project.open_view_project_all&amp;active_id=false&amp;menu_id=%s' % (env.ref('project.menu_main_pm').id),
+        'target': 'self',
+    }
+        </field>
+    </record>
+
+    <!-- Project Module Link -->
+    <menuitem id="menu_link_project"
+            name="📁 Project"
+            parent="menu_other_modules"
+            action="action_navigate_to_project"
+            sequence="10"
+            groups="base.group_user"/>
+
+    <!-- CRM Navigation -->
+    <record id="action_navigate_to_crm" model="ir.actions.server">
+        <field name="name">Go to CRM Module</field>
+        <field name="model_id" ref="base.model_ir_ui_menu"/>
+        <field name="state">code</field>
+        <field name="code">
+    action = {
+        'type': 'ir.actions.act_url',
+        'url': '/web#menu_id=%s' % (env.ref('crm.crm_menu_root').id),
+        'target': 'self',
+    }
+        </field>
+    </record>
+
+    <menuitem id="menu_link_crm"
+            name="💼 CRM"
+            parent="menu_other_modules"
+            action="action_navigate_to_crm"
+            sequence="20"/>
+
+   <!-- <menuitem id="menu_link_[module]"
+          name="[Display Name]"
+          parent="menu_other_modules"
+          action="[module].[action_name]"
+          sequence="[number]"
+          groups="base.group_user"/> -->
+</odoo>

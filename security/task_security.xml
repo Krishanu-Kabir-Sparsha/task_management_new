@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Create Task Management Category -->
+    <record id="module_category_task_management" model="ir.module.category">
+        <field name="name">Task Management</field>
+        <field name="description">Manage task access rights</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <!-- Task Management Groups -->
+    <record id="group_task_user" model="res.groups">
+        <field name="name">User</field>
+        <field name="category_id" ref="module_category_task_management"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="group_task_manager" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="category_id" ref="module_category_task_management"/>
+        <field name="implied_ids" eval="[(4, ref('group_task_user'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+
+    <!-- Record Rules -->
+    <record id="task_management_rule_user" model="ir.rule">
+        <field name="name">Task Management: User can see own and team tasks</field>
+        <field name="model_id" ref="model_task_management"/>
+        <field name="domain_force">['|', '|', '|',
+            ('user_id', '=', user.id),
+            ('team_ids', 'in', user.id),
+            ('team_id.member_ids', 'in', user.id),
+            ('team_id.manager_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('group_task_user'))]"/>
+    </record>
+
+    <record id="task_management_rule_manager" model="ir.rule">
+        <field name="name">Task Management: Manager can see all tasks</field>
+        <field name="model_id" ref="model_task_management"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_task_manager'))]"/>
+    </record>
+
+    <!-- Subtask Rules -->
+    <record id="task_subtask_rule_user" model="ir.rule">
+        <field name="name">Task Subtask: Based on parent task access</field>
+        <field name="model_id" ref="model_task_subtask"/>
+        <field name="domain_force">['|', '|', '|',
+            ('parent_task_id.user_id', '=', user.id),
+            ('parent_task_id.team_ids', 'in', user.id),
+            ('user_ids', 'in', user.id),
+            ('parent_task_id.team_id.member_ids', 'in', user.id)]</field>
+        <field name="groups" eval="[(4, ref('group_task_user'))]"/>
+    </record>
+
+    <record id="task_subtask_rule_manager" model="ir.rule">
+        <field name="name">Task Subtask: Manager can see all</field>
+        <field name="model_id" ref="model_task_subtask"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_task_manager'))]"/>
+    </record>
+
+   <!-- Time Log Rules -->
+    <record id="task_timesheet_rule_user" model="ir.rule">
+        <field name="name">Task Time Log: Based on task access</field>
+        <field name="model_id" ref="model_task_timesheet_line"/>
+        <field name="domain_force">['|',
+            ('task_id.user_id', '=', user.id),
+            ('user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('group_task_user'))]"/>
+    </record>
+
+    <record id="task_timesheet_rule_manager" model="ir.rule">
+        <field name="name">Task Time Log: Manager can see all</field>
+        <field name="model_id" ref="model_task_timesheet_line"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_task_manager'))]"/>
+    </record>
+
+    <!-- Team Rules -->
+    <record id="task_team_rule_user" model="ir.rule">
+        <field name="name">Task Team: User can see teams they belong to</field>
+        <field name="model_id" ref="model_task_team"/>
+        <field name="domain_force">['|', 
+            ('manager_id', '=', user.id),
+            ('member_ids', 'in', user.id)]</field>
+        <field name="groups" eval="[(4, ref('group_task_user'))]"/>
+    </record>
+
+    <record id="task_team_rule_manager" model="ir.rule">
+        <field name="name">Task Team: Manager can see all teams</field>
+        <field name="model_id" ref="model_task_team"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_task_manager'))]"/>
+    </record>
+</odoo>

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Team Form View -->
+    <record id="view_task_team_form" model="ir.ui.view">
+        <field name="name">task.team.form</field>
+        <field name="model">task.team</field>
+        <field name="arch" type="xml">
+            <form string="Task Team">
+                <header>
+                    <button name="action_create_task" type="object" string="Create Team Task" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_tasks" type="object" class="oe_stat_button" icon="fa-tasks">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="task_count"/>
+                                </span>
+                                <span class="o_stat_text">Tasks</span>
+                            </div>
+                        </button>
+                        <button name="action_view_child_teams" type="object" class="oe_stat_button" icon="fa-sitemap" invisible="child_team_count == 0">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="child_team_count"/>
+                                </span>
+                                <span class="o_stat_text">Sub Teams</span>
+                            </div>
+                        </button>
+                    </div>
+                    
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" invisible="active == True"/>
+                    <widget name="web_ribbon" title="Parent Team" bg_color="bg-info" invisible="team_type != 'parent'"/>
+                    
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Development Team"/>
+                        </h1>
+                        <field name="team_type" invisible="1"/>
+                    </div>
+                    
+                    <group>
+                        <group>
+                            <field name="manager_id" widget="many2one_avatar_user"/>
+                            <field name="parent_team_id" 
+                                options="{'no_create_edit': False}"
+                                context="{'form_view_ref': 'task_management.view_task_team_form'}"
+                                domain="[('id', 'not in', [id] + child_team_ids)]"/>
+                        </group>
+                        <group>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Team Members" name="members">
+                            <field name="member_ids" widget="many2many">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="email"/>
+                                    <field name="phone" optional="show"/>
+                                </list>
+                            </field>
+                        </page>
+                        
+                        <page string="Sub Teams" name="child_teams">
+                            <field name="child_team_ids" 
+                                context="{'default_parent_team_id': id, 'default_company_id': company_id, 'default_manager_id': manager_id}">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="manager_id" widget="many2one_avatar_user" required="1"/>
+                                    <field name="task_count"/>
+                                    <field name="active" optional="show"/>
+                                    <button name="action_view_tasks" type="object" string="View Tasks" class="btn-link" icon="fa-eye"/>
+                                </list>
+                            </field>
+                        </page>
+                        
+                        <page string="Description" name="description">
+                            <field name="description" widget="html" placeholder="Describe team responsibilities, goals, and structure..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Team List View -->
+    <record id="view_task_team_list" model="ir.ui.view">
+        <field name="name">task.team.list</field>
+        <field name="model">task.team</field>
+        <field name="arch" type="xml">
+            <list string="Teams">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="manager_id" widget="many2one_avatar_user"/>
+                <field name="parent_team_id" optional="show"/>
+                <field name="task_count"/>
+                <button name="action_create_task" type="object" string="Create Task" class="btn-primary" icon="fa-plus"/>
+                <button name="action_view_tasks" type="object" string="View Tasks" class="btn-link" icon="fa-eye"/>
+            </list>
+        </field>
+    </record>
+
+        <!-- Team Kanban View -->
+    <record id="view_task_team_kanban" model="ir.ui.view">
+        <field name="name">task.team.kanban</field>
+        <field name="model">task.team</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="name"/>
+                <field name="manager_id"/>
+                <field name="task_count"/>
+                <field name="color"/>
+                <field name="team_type"/>
+                <field name="parent_team_id"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click">
+                            <div class="o_dropdown_kanban dropdown" groups="base.group_user">
+                                <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#">
+                                    <span class="fa fa-ellipsis-v"/>
+                                </a>
+                                <div class="dropdown-menu" role="menu">
+                                    <t t-if="widget.editable"><a role="menuitem" type="edit" class="dropdown-item">Edit</a></t>
+                                    <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
+                                    <div role="separator" class="dropdown-divider"/>
+                                    <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                </div>
+                            </div>
+                            <div class="oe_kanban_content">
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title">
+                                            <field name="name"/>
+                                        </strong>
+                                        <small t-if="record.parent_team_id.raw_value" class="text-muted">
+                                            <i class="fa fa-level-up"/> <field name="parent_team_id"/>
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_body">
+                                    <div>Manager: <field name="manager_id" widget="many2one_avatar_user"/></div>
+                                    <div class="mt8">
+                                        <span class="badge badge-pill badge-info">
+                                            <i class="fa fa-tasks"/> <field name="task_count"/> Tasks
+                                        </span>
+                                        <span t-if="record.team_type.raw_value == 'parent'" class="badge badge-pill badge-warning ml4">
+                                            <i class="fa fa-sitemap"/> Parent Team
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <button name="action_create_task" type="object" class="btn btn-sm btn-success">
+                                            <i class="fa fa-plus"/> New Task
+                                        </button>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <button name="action_view_tasks" type="object" class="btn btn-sm btn-primary">
+                                            View Tasks
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+</odoo>
