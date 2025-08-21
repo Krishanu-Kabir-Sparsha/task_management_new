@@ -166,8 +166,8 @@ class TaskTimesheetLine(models.Model):
         for record in self:
             if record.subtask_id and record.subtask_id.deadline:
                 record.date = record.subtask_id.deadline
-                if not record.name:  # Also auto-fill description if empty
-                    record.name = record.subtask_id.name
+                # if not record.name:  # Also auto-fill description if empty
+                #     record.name = record.subtask_id.name
     
     @api.onchange('date')
     def _onchange_date(self):
@@ -199,8 +199,8 @@ class TaskTimesheetLine(models.Model):
         for record in self:
             if record.unit_amount <= 0:
                 raise ValidationError(_('Duration must be greater than 0 hours.'))
-            if record.unit_amount > 24:
-                raise ValidationError(_('Duration cannot exceed 24 hours for a single day.'))
+            # if record.unit_amount > 24:
+            #     raise ValidationError(_('Duration cannot exceed 24 hours for a single day.'))
             if record.unit_amount > 12:
                 # Warning for unusual durations
                 if not self.env.context.get('skip_duration_warning'):

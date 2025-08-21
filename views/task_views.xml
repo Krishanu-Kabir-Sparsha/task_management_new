@@ -123,7 +123,7 @@
                                         domain="[('parent_task_id', '=', parent.id)]"/>
                                     <field name="name" string="📝 Description" required="1"/>
                                     <field name="unit_amount" widget="float_time" string="⏱️ Hours" required="1" sum="Total"/>
-                                    <field name="hours_display" string="Time (HH:MM)" readonly="1"/>
+                                    <!-- <field name="hours_display" string="Time (HH:MM)" readonly="1"/> -->
                                     <button name="action_edit_time_log" type="object" string="Edit" icon="fa-edit" class="btn-link"/>
                                 </list>
                             </field>
@@ -292,14 +292,14 @@
                             <field name="timesheet_ids" context="{'default_task_id': id}">
                                 <list editable="bottom">
                                     <field name="date" string="Work Date"/>
-                                    <field name="user_id" widget="many2one_avatar_user" string="Team Member"/>
+                                    <field name="user_id" widget="many2one_avatar_user" string="Task Supervisor"/>
                                     <field name="subtask_id" 
                                         string="Subtask/Work Item" 
                                         options="{'no_create': True, 'no_open': True}"
                                         domain="[('parent_task_id', '=', parent.id)]"/>
                                     <field name="name" string="Work Details" optional="show"/>
                                     <field name="unit_amount" widget="float_time" string="Hours" sum="Total Team Hours"/>
-                                    <field name="hours_display" string="Time (HH:MM)" readonly="1" optional="show"/>
+                                    <!-- <field name="hours_display" string="Time (HH:MM)" readonly="1" optional="show"/> -->
                                 </list>
                             </field>
                             <group string="Time Tracking Info" col="1">
