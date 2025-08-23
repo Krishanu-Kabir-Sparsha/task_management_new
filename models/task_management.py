@@ -106,27 +106,28 @@ class TaskManagement(models.Model):
     )
     
     # Date Fields
-    date_deadline = fields.Datetime(
+    date_deadline = fields.Date(
         string='Deadline',
         tracking=True,
         index=True,
         help='Deadline for task completion'
     )
-    
-    date_start = fields.Datetime(
+
+
+    date_start = fields.Date(
         string='Start Date',
-        default=fields.Datetime.now,
+        default=fields.Date.today,
         tracking=True,
-        help='Task start date and time'
+        help='Task start date'
     )
-    
-    date_end = fields.Datetime(
+
+    date_end = fields.Date(
         string='End Date',
         tracking=True,
-        help='Task completion date and time'
+        help='Task completion date'
     )
-    
-    date_assign = fields.Datetime(
+
+    date_assign = fields.Date(
         string='Assignment Date',
         tracking=True,
         help='Date when task was last assigned'

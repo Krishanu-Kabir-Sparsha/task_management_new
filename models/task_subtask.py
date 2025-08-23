@@ -50,7 +50,7 @@ class TaskSubtask(models.Model):
     description = fields.Text(string='Description')
     
     # Add parent task deadline for reference
-    parent_deadline = fields.Datetime(
+    parent_deadline = fields.Date(
         related='parent_task_id.date_deadline',
         string='Task Deadline',
         readonly=True,

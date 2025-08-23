@@ -33,7 +33,7 @@
                     </div>
                     
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" invisible="active == True"/>
-                    <widget name="web_ribbon" title="Overdue" bg_color="bg-warning" invisible="days_to_deadline >= 0 or not date_deadline"/>
+                    <!-- <widget name="web_ribbon" title="Overdue" bg_color="bg-warning" invisible="days_to_deadline >= 0 or not date_deadline"/> -->
                     
                     <div class="oe_title">
                         <h1>
@@ -48,9 +48,13 @@
                         <group string="Task Details">
                             <field name="priority" widget="priority"/>
                             <field name="date_start" string="Start Date" 
-                                help="Task start date. Due date must be after this date."/>
-                            <field name="date_deadline" string="Due Date" 
-                                help="Task due date must be after the start date."/>
+                                widget="daterange"
+                                class="oe_date_only"
+                                help="Task start date. End date must be after this date."/>
+                            <field name="date_deadline" string="End Date" 
+                                widget="daterange"
+                                class="oe_date_only"
+                                help="Task end date must be after the start date."/>
                             <label for="progress" string="Progress"/>
                             <div class="o_row">
                                 <field name="progress" widget="progressbar" nolabel="1"/>
@@ -91,8 +95,8 @@
                                         options="{'no_create': True}" 
                                         string="Assigned To"
                                         domain="[('share', '=', False)]"/>
-                                    <field name="deadline" string="Due Date" 
-                                        help="Must be between parent task's start and due dates"/>
+                                    <field name="deadline" string="End Date" 
+                                        help="Must be between parent task's start and end dates"/>
                                     <field name="description" string="Notes" optional="hide"/>
                                 </list>
                             </field>
@@ -192,7 +196,7 @@
                     </div>
                     
                     <widget name="web_ribbon" title="Critical" bg_color="bg-danger" invisible="priority != '3'"/>
-                    <widget name="web_ribbon" title="Delayed" bg_color="bg-warning" invisible="days_to_deadline >= 0 or not date_deadline"/>
+                    <!-- <widget name="web_ribbon" title="Delayed" bg_color="bg-warning" invisible="days_to_deadline >= 0 or not date_deadline"/> -->
                     
                     <div class="oe_title">
                         <label for="name" string="Task Name"/>
@@ -210,8 +214,12 @@
                         </group>
                         <group string="Timeline">
                             <field name="date_start" string="Kickoff Date" 
+                                widget="date" 
+                                options="{'datepicker': {'showTime': false}}"
                                 help="Project kickoff date. Delivery date must be after this date."/>
                             <field name="date_deadline" string="Delivery Date" 
+                                widget="date" 
+                                options="{'datepicker': {'showTime': false}}"
                                 help="Project delivery date must be after the kickoff date."/>
                             <label for="progress" string="Overall Progress"/>
                             <div class="o_row">
@@ -252,8 +260,8 @@
                                         string="Assigned to"
                                         domain="[('share', '=', False)]"
                                         required="1"/>
-                                    <field name="deadline" string="Due Date" 
-                                        help="Must be between parent task's start and due dates"/>
+                                    <field name="deadline" string="End Date" 
+                                        help="Must be between parent task's start and end dates"/>
                                     <field name="description" string="Details" optional="show"/>
                                 </list>
                             </field>
@@ -345,7 +353,8 @@
                 <field name="priority" widget="priority" nolabel="1"/>
                 <field name="name" string="Task"/>
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                <field name="date_deadline" widget="remaining_days" string="Due"/>
+                <field name="date_start" string="Start Date" optional="show" widget="date"/>
+                <field name="date_deadline" string="End Date" optional="show" widget="date"/>
                 <field name="stage_id" string="Status"/>
                 <field name="progress" widget="progressbar" string="Progress"/>
                 <field name="kanban_state" widget="state_selection" nolabel="1" optional="show"/>
@@ -364,8 +373,8 @@
                 <field name="name" string="Task Name"/>
                 <field name="team_id" string="Team"/>
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
-                <field name="date_start" string="Start" optional="show"/>
-                <field name="date_deadline" string="Deadline"/>
+                <field name="date_start" string="Start" optional="show" widget="date"/>
+                <field name="date_deadline" string="Deadline" widget="date"/>
                 <field name="stage_id" string="Phase"/>
                 <field name="progress" widget="progressbar" string="Completion"/>
                 <field name="is_closed" invisible="1"/>
@@ -420,6 +429,11 @@
                 <field name="stage_id"/>
                 <field name="tag_ids"/>
                 <separator/>
+                <!-- NEW FILTERS -->
+                <filter string="Assigned to Me" name="assigned_to_me" 
+                        domain="['|', ('user_id', '=', uid), ('subtask_ids.user_ids', 'in', uid)]"/>
+                <filter string="My Subtasks" name="my_subtasks" 
+                        domain="[('subtask_ids.user_ids', 'in', uid)]"/>
                 <filter string="My Tasks" name="my_tasks" domain="[('user_id', '=', uid), ('task_type', '=', 'individual')]"/>
                 <filter string="Team Tasks" name="team_tasks" domain="[('task_type', '=', 'team')]"/>
                 <filter string="High Priority" name="high_priority" domain="[('priority', 'in', ['2', '3'])]"/>
@@ -430,7 +444,7 @@
                 <separator/>
                 <filter string="Open Tasks" name="open_tasks" domain="[('is_closed', '=', False)]"/>
                 <filter string="Closed Tasks" name="closed_tasks" domain="[('is_closed', '=', True)]"/>
-                <filter string="Overdue" name="overdue" domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d')), ('is_closed', '=', False)]"/>
+                <!-- <filter string="Overdue" name="overdue" domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d')), ('is_closed', '=', False)]"/> -->
                 <separator/>
                 <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                 <group expand="0" string="Group By">

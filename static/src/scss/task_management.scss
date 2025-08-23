@@ -56,3 +56,16 @@
         }
     }
 }
+
+/* Hide time picker in date fields */
+.o_task_form {
+    .o_datepicker_time_part,
+    .o_time_picker_select,
+    .o_datepicker_input_group .o_time_picker {
+        display: none !important;
+    }
+    
+    .o_field_date input[type="text"] {
+        width: 100% !important;
+    }
+}

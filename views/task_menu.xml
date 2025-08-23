@@ -9,7 +9,7 @@
         <field name="context">{
             'default_task_type': 'individual',
             'default_user_id': uid,
-            'search_default_open_tasks': 1
+            'search_default_open_tasks': 1,
         }</field>
         <field name="view_ids" eval="[(5, 0, 0),
             (0, 0, {'view_mode': 'list', 'view_id': ref('view_individual_task_list')}),
