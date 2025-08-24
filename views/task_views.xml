@@ -453,6 +453,9 @@
                     <filter string="Priority" name="group_by_priority" context="{'group_by': 'priority'}"/>
                     <filter string="Assigned User" name="group_by_user" context="{'group_by': 'user_id'}"/>
                     <filter string="Team" name="group_by_team" context="{'group_by': 'team_id'}"/>
+                    <separator/>
+                    <filter string="Date" name="group_by_date" context="{'group_by': 'date_deadline'}">
+                    </filter>
                 </group>
             </search>
         </field>
