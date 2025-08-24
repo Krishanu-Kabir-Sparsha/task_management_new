@@ -45,7 +45,7 @@ class TaskManagement(models.Model):
     # User Assignment Fields
     user_id = fields.Many2one(
         'res.users',
-        string='Assigned to',
+        string='Delegated to',
         default=lambda self: self.env.user if self.env.context.get('default_task_type') != 'team' else False,
         tracking=True,
         domain="[('share', '=', False), ('active', '=', True)]",

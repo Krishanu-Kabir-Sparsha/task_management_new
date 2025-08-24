@@ -47,6 +47,7 @@
                     <group>
                         <group string="Task Details">
                             <field name="priority" widget="priority"/>
+                            <field name="user_id" widget="Many2many_tags" options="{'no_create': True}" string="Delegated To"/>
                             <field name="date_start" string="Start Date" 
                                 widget="daterange"
                                 class="oe_date_only"
@@ -351,6 +352,7 @@
                   decoration-success="is_closed" decoration-muted="kanban_state == 'blocked'">
                 <field name="sequence" widget="handle"/>
                 <field name="priority" widget="priority" nolabel="1"/>
+                <field name="user_id" string="Delegate To" optional="show"/>
                 <field name="name" string="Task"/>
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                 <field name="date_start" string="Start Date" optional="show" widget="date"/>
