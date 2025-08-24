@@ -276,8 +276,29 @@ class TaskManagement(models.Model):
         string='Is User Team Task',
         compute='_compute_is_user_team_task'
     )
+
+    task_count_type = fields.Selection([
+        ('total', 'All Tasks'),
+        ('created', 'Created By Me'),
+        ('delegated', 'Delegated By Me')
+    ], string='Task Count Type', compute='_compute_task_count_type', store=True)
+
+
     
     # ========== COMPUTE METHODS ==========
+
+    # Computed methods for Tasks Counts
+    @api.depends('create_uid', 'user_id')
+    def _compute_task_count_type(self):
+        current_uid = self.env.user.id
+        for task in self:
+            if task.create_uid.id == current_uid:
+                if task.user_id and task.user_id.id != current_uid:
+                    task.task_count_type = 'delegated'
+                else:
+                    task.task_count_type = 'created'
+            else:
+                task.task_count_type = 'total'
     
     def _get_default_stage_id(self):
         """Get default stage for new tasks"""
@@ -630,12 +651,22 @@ class TaskManagement(models.Model):
             'by_subtask': subtask_times,
             'is_over_budget': self.effective_hours > self.planned_hours if self.planned_hours else False
         }
+    
+    # Update read_group method
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        """Override to handle None values in groupby"""
         res = super(TaskManagement, self).read_group(domain, fields, groupby, offset, limit, orderby, lazy)
-        if groupby and groupby[0] in ['date_deadline', 'date_start', 'stage_id', 'user_id', 'team_id']:
+        if groupby and groupby[0] == 'task_count_type':
+            current_uid = self.env.user.id
             for line in res:
-                if line.get(groupby[0]) is False:
-                    line[groupby[0]] = _('Undefined')
+                if line.get('task_count_type') == 'total':
+                    line['task_count_type_count'] = self.search_count([])
+                elif line.get('task_count_type') == 'created':
+                    line['task_count_type_count'] = self.search_count([('create_uid', '=', current_uid)])
+                elif line.get('task_count_type') == 'delegated':
+                    line['task_count_type_count'] = self.search_count([
+                        ('create_uid', '=', current_uid),
+                        ('user_id', '!=', False),
+                        ('user_id', '!=', current_uid)
+                    ])
         return res
