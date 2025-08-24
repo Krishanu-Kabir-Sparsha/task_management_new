@@ -630,3 +630,12 @@ class TaskManagement(models.Model):
             'by_subtask': subtask_times,
             'is_over_budget': self.effective_hours > self.planned_hours if self.planned_hours else False
         }
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        """Override to handle None values in groupby"""
+        res = super(TaskManagement, self).read_group(domain, fields, groupby, offset, limit, orderby, lazy)
+        if groupby and groupby[0] in ['date_deadline', 'date_start', 'stage_id', 'user_id', 'team_id']:
+            for line in res:
+                if line.get(groupby[0]) is False:
+                    line[groupby[0]] = _('Undefined')
+        return res

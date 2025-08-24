@@ -57,3 +57,17 @@
     }
 }
 
+/* Fix list view column spacing */
+.o_list_view {
+    th.o_list_number_th {
+        min-width: 120px;
+    }
+    
+    td.o_list_date,
+    th.o_column_sortable[data-name="date_start"],
+    th.o_column_sortable[data-name="date_deadline"],
+    th.o_column_sortable[data-name="stage_id"] {
+        min-width: 110px;
+        padding-right: 15px;
+    }
+}

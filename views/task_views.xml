@@ -354,9 +354,9 @@
                 <field name="name" string="Task"/>
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                 <field name="date_start" string="Start Date" optional="show" widget="date"/>
-                <field name="date_deadline" string="End Date" optional="show" widget="date"/>
-                <field name="stage_id" string="Status"/>
-                <field name="progress" widget="progressbar" string="Progress"/>
+                <field name="date_deadline" string="End Date" optional="show" widget="date" width="120px"/>
+                <field name="stage_id" string="Status" width="120px" optional="show"/>
+                <field name="progress" widget="progressbar" string="Progress" optional="show"/>
                 <field name="kanban_state" widget="state_selection" nolabel="1" optional="show"/>
                 <field name="is_closed" invisible="1"/>
             </list>
@@ -374,9 +374,9 @@
                 <field name="team_id" string="Team"/>
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
                 <field name="date_start" string="Start" optional="show" widget="date"/>
-                <field name="date_deadline" string="Deadline" widget="date"/>
-                <field name="stage_id" string="Phase"/>
-                <field name="progress" widget="progressbar" string="Completion"/>
+                <field name="date_deadline" string="Deadline" widget="date" width="120px"/>
+                <field name="stage_id" string="Phase" width="120px" optional="show"/>
+                <field name="progress" widget="progressbar" string="Completion" optional="show"/>
                 <field name="is_closed" invisible="1"/>
             </list>
         </field>
