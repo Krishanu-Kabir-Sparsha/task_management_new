@@ -417,6 +417,7 @@
                 <field name="kanban_state" widget="state_selection" nolabel="1" optional="show"/>
                 <field name="is_closed" invisible="1"/>
                 <field name="active" invisible="1"/>
+                <field name="task_category" invisible="1"/>
             </list>
         </field>
     </record>
@@ -472,7 +473,7 @@
                         domain="[('stage_id.is_closed', '=', True)]"/>
                 
                 <separator/>
-                <filter string="High Priority" name="high_priority" domain="[('priority', 'in', ['2', '3'])]"/>
+                <!-- <filter string="High Priority" name="high_priority" domain="[('priority', 'in', ['2', '3'])]"/> -->
                 <filter string="Overdue" name="overdue" 
                         domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d')), ('stage_id.is_closed', '=', False)]"/>
                 
@@ -481,26 +482,40 @@
                     <!-- <filter string="Tasks by Stage" 
                             name="count_by_stage" 
                             context="{'group_by': 'stage_id'}"
-                            help="Show total count of tasks in each stage"/> -->
+                            help="Show total count of tasks in each stage"/>
                             
-                    <!-- <filter string="Progress Status" 
+                    <filter string="Progress Status" 
                             name="count_by_kanban_state" 
                             context="{'group_by': 'kanban_state'}"
                             help="Show task distribution by progress status"/> -->
                             
-                    <filter string="Total Task Count" 
+                    <!-- <filter string="Total Task Count" 
                             name="total_task_count" 
-                            context="{'group_by': 'task_count_type'}"
-                            help="Show total tasks with breakdown"/>
+                            context="{'group_by': 'task_analysis_type'}"
+                            help="Show total tasks with breakdown"/> -->
+
+                    <!-- <filter string="Total Task Count" 
+                            name="total_task_count" 
+                            context="{'group_by': 'task_category'}"
+                            help="Group tasks by category (Created by Me, Delegated by Me, Other Tasks)"/>         -->
                     
                     <filter string="Date" 
                             name="group_by_date" 
                             context="{'group_by': 'date_deadline'}"/>
+
+                    <!-- <filter string="Total Task Count" name="task_count">
+                        <filter string="Created by Me" 
+                                name="count_created_by_me" 
+                                domain="[('create_uid', '=', uid)]"/>
+                        <filter string="Delegated by Me" 
+                                name="count_delegated_by_me" 
+                                domain="[('create_uid', '=', uid), ('user_id', '!=', False), ('user_id', '!=', uid)]"/>
+                    </filter> -->
                             
-                    <filter string="Priority Analysis" 
+                    <!-- <filter string="Priority Analysis" 
                             name="count_by_priority" 
                             context="{'group_by': 'priority'}"
-                            help="Show task count by priority level"/>
+                            help="Show task count by priority level"/> -->
                             
                     <!-- <filter string="Monthly Timeline" 
                             name="count_by_month" 
@@ -509,12 +524,14 @@
                 </group>
                 <!-- Grouping -->
                 <group expand="0" string="Group By">
+                    <filter string="Total Task Count" name="group_by_task_category" context="{'group_by': 'task_category'}" help="Group tasks by Created by Me, Delegated by Me, or Other Tasks"/>
+                    <separator/>
                     <filter string="Team" name="group_by_team" context="{'group_by': 'team_id'}"/>
                     <filter string="Stage" name="group_by_stage" context="{'group_by': 'stage_id'}"/>
                     <filter string="Created By" name="group_by_creator" context="{'group_by': 'create_uid'}"/>
                     <filter string="Assigned To" name="group_by_user" context="{'group_by': 'user_id'}"/>
                     <filter string="Priority" name="group_by_priority" context="{'group_by': 'priority'}"/>
-                    <filter string="Deadline" name="group_by_deadline" context="{'group_by': 'date_deadline'}"/>
+                    <!-- <filter string="Deadline" name="group_by_deadline" context="{'group_by': 'date_deadline'}"/> -->
                     <separator/>
                     
                 </group>

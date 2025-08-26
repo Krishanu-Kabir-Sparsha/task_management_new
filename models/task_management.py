@@ -276,29 +276,9 @@ class TaskManagement(models.Model):
         string='Is User Team Task',
         compute='_compute_is_user_team_task'
     )
-
-    task_count_type = fields.Selection([
-        ('total', 'All Tasks'),
-        ('created', 'Created By Me'),
-        ('delegated', 'Delegated By Me')
-    ], string='Task Count Type', compute='_compute_task_count_type', store=True)
-
-
     
     # ========== COMPUTE METHODS ==========
 
-    # Computed methods for Tasks Counts
-    @api.depends('create_uid', 'user_id')
-    def _compute_task_count_type(self):
-        current_uid = self.env.user.id
-        for task in self:
-            if task.create_uid.id == current_uid:
-                if task.user_id and task.user_id.id != current_uid:
-                    task.task_count_type = 'delegated'
-                else:
-                    task.task_count_type = 'created'
-            else:
-                task.task_count_type = 'total'
     
     def _get_default_stage_id(self):
         """Get default stage for new tasks"""
@@ -652,21 +632,32 @@ class TaskManagement(models.Model):
             'is_over_budget': self.effective_hours > self.planned_hours if self.planned_hours else False
         }
     
-    # Update read_group method
-    @api.model
-    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        res = super(TaskManagement, self).read_group(domain, fields, groupby, offset, limit, orderby, lazy)
-        if groupby and groupby[0] == 'task_count_type':
-            current_uid = self.env.user.id
-            for line in res:
-                if line.get('task_count_type') == 'total':
-                    line['task_count_type_count'] = self.search_count([])
-                elif line.get('task_count_type') == 'created':
-                    line['task_count_type_count'] = self.search_count([('create_uid', '=', current_uid)])
-                elif line.get('task_count_type') == 'delegated':
-                    line['task_count_type_count'] = self.search_count([
-                        ('create_uid', '=', current_uid),
-                        ('user_id', '!=', False),
-                        ('user_id', '!=', current_uid)
-                    ])
-        return res
+    
+    task_category = fields.Selection([
+        ('created', 'Created by Me'),
+        ('delegated', 'Delegated by Me'),
+        ('other', 'Other Tasks')
+    ], string='Task Category', compute='_compute_task_category', store=True, default='other')
+
+    @api.depends('create_uid', 'user_id')
+    def _compute_task_category(self):
+        current_uid = self.env.uid
+        for task in self:
+            _logger.info("Computing task_category for task %s, uid %s", task.name, current_uid)
+            if task.create_uid.id == current_uid:
+                if task.user_id and task.user_id.id != current_uid:
+                    task.task_category = 'delegated'
+                else:
+                    task.task_category = 'created'
+            else:
+                task.task_category = 'other'
+    
+    def _recompute_task_category(self):
+        """Recompute task_category for all records."""
+        for task in self.search([]):
+            task._compute_task_category()
+
+    # Add this to your module's __init__.py or __manifest__.py post-init hook
+    def _post_init_hook(self, cr, registry):
+        env = api.Environment(cr, SUPERUSER_ID, {})
+        env['task.management']._recompute_task_category()

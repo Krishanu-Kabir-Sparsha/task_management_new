@@ -37,10 +37,12 @@ A comprehensive task management system with:
         'views/task_config_settings.xml',
         'views/task_menu.xml',
     ],
+    'post_init_hook': '_post_init_hook',
     'assets': {
         'web.assets_backend': [
             'task_management/static/src/scss/task_management.scss',
             'task_management/static/src/js/task_widget.js',
+            
         ],
     },
     'installable': True,
